@@ -12,12 +12,20 @@ Este documento descreve o comportamento da implementação atual.
 1. Mantenha os arquivos `.ino`, `.cpp` e `.h` juntos na pasta `JogoPorFases`.
 2. Monte os componentes conforme a tabela de pinagens abaixo.
 3. Abra `JogoPorFases.ino` na Arduino IDE.
-4. Selecione a placa ESP32 e a porta utilizadas na montagem.
+4. Para a NodeMCU-32S, selecione **NodeMCU-32S** no pacote **esp32** e a porta utilizada na montagem.
 5. Compile e envie o programa. Os arquivos `.cpp` da pasta são compilados junto com o sketch.
 6. Abra o Monitor Serial em **115200 baud** para acompanhar o jogo.
 
 Na versão atual, a partida começa automaticamente na fase 1 quando a ESP32 é ligada
 ou reiniciada. Depois de uma vitória ou derrota, pressione START para começar novamente.
+
+### Erro de compilação: `multiple definition of cores`
+
+O vetor de nomes das cores é definido em `Configuracao.h`, incluído pelo sketch e
+pelos três arquivos `.cpp`. A declaração deve ser `const char* const cores[...]`:
+o segundo `const` torna o próprio vetor constante e permite sua definição nesse
+cabeçalho sem conflito na ligação. Apenas `const char* cores[...]` deixa o vetor
+mutável e gera múltiplas definições. Essa correção já está aplicada no projeto.
 
 ## Visão geral da partida
 
@@ -326,7 +334,16 @@ além de soluções curtas para todos os painéis, reinício por START, debounce
 botões mantidos, descarte de entradas durante avisos e transição da fase 2.
 As instruções para executar os testes estão em `tests/LEIA-ME.md`.
 
-Os quatro módulos foram compilados em objetos com o compilador Xtensa e os
-cabeçalhos reais do Arduino ESP32 3.3.11. Essa etapa não gera um firmware completo.
-A validação física ainda exige compilar e enviar pela Arduino IDE e conferir na
-placa os botões, os LEDs e a sinalização do buzzer ativo.
+Em 19/10/2026, a compilação completa com Arduino CLI e Arduino ESP32 3.3.11 foi
+concluída para **NodeMCU-32S** (`esp32:esp32:nodemcu-32s`), após corrigir a
+definição do vetor `cores`. O firmware ocupa 286.898 bytes (21%) de armazenamento
+e 22.628 bytes (6%) de memória dinâmica.
+
+Para repetir a verificação, execute na pasta do projeto:
+
+```sh
+arduino-cli compile --fqbn esp32:esp32:nodemcu-32s .
+```
+
+A validação física ainda exige enviar o firmware e conferir na placa os botões,
+os LEDs e a sinalização do buzzer ativo.

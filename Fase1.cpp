@@ -11,7 +11,7 @@ int resposta[TOTAL_CORES];
 int posicaoFase1 = 0;
 int tentativasFase1 = 0;
 
-} // namespace
+}  // namespace
 
 void reiniciarFase1() {
   fase1Inicializada = false;
@@ -129,8 +129,7 @@ void executarFase1() {
 
     digitalWrite(
       ledPins[p],
-      correta ? HIGH : LOW
-    );
+      correta ? HIGH : LOW);
 
     if (!correta) {
       acertou = false;
@@ -141,8 +140,7 @@ void executarFase1() {
     Serial.print(": ");
 
     Serial.println(
-      correta ? "CORRETA" : "INCORRETA"
-    );
+      correta ? "CORRETA" : "INCORRETA");
   }
 
   posicaoFase1 = 0;

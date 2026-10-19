@@ -50,7 +50,9 @@ const int buttonPins[4] = {
   BUTTON_START
 };
 
-const char* cores[TOTAL_CORES] = {
+// O vetor tambem e const para poder ser definido neste cabecalho
+// sem gerar multiplas definicoes entre o sketch e os arquivos .cpp.
+const char* const cores[TOTAL_CORES] = {
   "Verde",
   "Amarelo",
   "Vermelho"
